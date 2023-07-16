@@ -13,10 +13,9 @@ public class EntityDamageEvent implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Entity damager = event.getDamager();
         Entity damaged = event.getEntity();
-
-        // Check if the damager is your custom boss entity
         if (Main.containsPiglinBoss(damager)) {
             PiglinWhisperer boss = Main.findPiglinBoss(damager);
+            assert boss != null;
             boss.attack((Player) damaged);
         }
     }
