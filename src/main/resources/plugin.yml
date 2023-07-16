@@ -1,0 +1,10 @@
+name: bosscore
+version: '${version}'
+main: austxnsheep.bosscore.Main
+api-version: 1.20
+
+commands:
+  boss:
+    description: summon bosses and whatever
+    usage: /boss
+    permission: bosscore.boss
