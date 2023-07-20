@@ -5,6 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import austxnsheep.bosscore.Commands.Boss;
 import austxnsheep.bosscore.CustomEntitys.PiglinWhisperer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public final class Main extends JavaPlugin {
         }
         return false;
     }
-    public static PiglinWhisperer findPiglinBoss(Entity e) {
+    public static @Nullable PiglinWhisperer findPiglinBoss(Entity e) {
         for (PiglinWhisperer piglin : PiglinWhispererList) {
             if (piglin.getBossEntity() == e) {
                 return piglin;

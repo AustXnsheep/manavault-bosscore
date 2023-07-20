@@ -1,6 +1,7 @@
 package austxnsheep.bosscore.Commands;
 
 import austxnsheep.bosscore.CustomMoves.PiglinMoves;
+import austxnsheep.bosscore.Summoning.SummonBoss;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +23,10 @@ public class Boss implements SummonBoss, PiglinMoves, CommandExecutor {
                 case "bossmove":
                     switch (args[1]) {
                         case "PiglinMove1" -> performCustomPiglinMove1(player.getLocation(), 5, 5);
-                        case "list" -> player.sendMessage("PiglinMove1\n");
+                        case "PiglinMove2" -> performCustomPiglinMove2(player.getLocation());
+                        case "PiglinMove3" -> performCustomPiglinMove3(player.getLocation());
+                        case "PiglinMove4" -> performCustomPiglinMove4(player.getLocation());
+                        case "list" -> player.sendMessage("PiglinMove1\nPiglinMove2\nPiglinMove3\nPiglinMove4");
                     }
                     break;
                 case "help":

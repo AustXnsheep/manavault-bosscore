@@ -1,13 +1,11 @@
 package austxnsheep.bosscore.CustomEntitys;
 
-import austxnsheep.bosscore.Items.equipBossWeapon;
+import austxnsheep.bosscore.Items.EquipBossWeapon;
 import austxnsheep.bosscore.CustomMoves.PiglinMoves;
-import austxnsheep.bosscore.PathFinding.PiglinBossPathfinding;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -19,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Objects;
 import java.util.Random;
 
-public class PiglinWhisperer implements equipBossWeapon, PiglinMoves {
+public class PiglinWhisperer implements EquipBossWeapon, PiglinMoves {
     //Only god knows how this works.
     private final LivingEntity bossEntity;
 
@@ -39,52 +37,57 @@ public class PiglinWhisperer implements equipBossWeapon, PiglinMoves {
         this.bossEntity.setHealth(100);
         this.bossEntity.customName(bossname);
         this.bossEntity.setCustomNameVisible(true);
-        //Custom ai, as we all could guess it doesn't work.
-
-        this.bossEntity.setAI(false);
-        Skeleton skeleton = (Skeleton) this.bossEntity;
-        PiglinBossPathfinding goal = new PiglinBossPathfinding(Main.getInstance(), (Mob) this.bossEntity);
-        if (!Bukkit.getMobGoals().hasGoal(skeleton, goal.getKey())) {
-            Bukkit.getMobGoals().addGoal(skeleton, 3, goal);
-        }
 
         //Equipment
-        equipSoulFireBow((Skeleton) this.bossEntity);
-        Objects.requireNonNull(this.bossEntity.getEquipment()).setHelmet(new ItemStack(Material.PIGLIN_HEAD));
+        equipPiglinBossEquipment((Skeleton) this.bossEntity);
         //other stuff
         Main.PiglinWhispererList.add(this);
 
         LivingEntity loopedEntity = this.bossEntity;
-
-        new BukkitRunnable() {
+        BukkitRunnable randommovetask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (!loopedEntity.isValid()) {
-                    // Entity is no longer valid, stop the task
                     cancel();
-                    return;
                 }
-
-                // Perform your action here
                 executeRandomMove();
             }
-        }.runTaskTimer(Main.getInstance(), 100L, 20L);
+        };
+        randommovetask.runTaskLater(Main.getInstance(), 200L);
+        BukkitRunnable changeweapontask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!loopedEntity.isValid()) {
+                    cancel();
+                }
+                switchWeapon();
+            }
+        };
+        changeweapontask.runTaskLater(Main.getInstance(), 200L);
     }
 
     public void attack(LivingEntity entity) {
+        performCustomPiglinMove4(entity.getLocation());
         entity.damage(10);
+    }
+    public void switchWeapon() {
+        if (Objects.requireNonNull(this.bossEntity.getEquipment()).getItemInMainHand().equals(new ItemStack(Material.BOW))) {
+            this.bossEntity.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_AXE));
+        } else {
+            equipPiglinBossEquipment((Skeleton) this.bossEntity);
+        }
     }
     public void executeRandomMove() {
         Random random = new Random();
-        int choice = random.nextInt(3); // Generates a random integer from 0 to 2
+        int choice = random.nextInt(3);
 
         switch (choice) {
             case 0:
                 performCustomPiglinMove1(this.bossEntity.getLocation(), 5, 5);
             case 1:
-
+                performCustomPiglinMove2(this.bossEntity.getLocation());
             case 2:
-
+                performCustomPiglinMove3(this.bossEntity.getLocation());
         }
     }
 
