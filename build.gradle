@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'spells'
-version = '1.4'
+version = '1.7'
 
 repositories {
     mavenCentral()
@@ -15,10 +15,15 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+    maven {
+        name "ParticleEffects"
+        url = "https://github.com/4kills/ParticleEffects/"
+    }
 }
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
+    compileOnly "com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.0.0"
 }
 
 def targetJavaVersion = 17

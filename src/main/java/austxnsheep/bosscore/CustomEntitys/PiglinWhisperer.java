@@ -1,8 +1,8 @@
 package austxnsheep.bosscore.CustomEntitys;
 
-import austxnsheep.bosscore.Items.equipBossWeapon;
+import austxnsheep.bosscore.Items.EquipBossEquipment;
 import austxnsheep.bosscore.CustomMoves.PiglinMoves;
-import austxnsheep.bosscore.PathFinding.PiglinBossPathfinding;
+import austxnsheep.bosscore.NbtUtil.NBTUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -11,6 +11,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import austxnsheep.bosscore.Main;
@@ -19,9 +22,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Objects;
 import java.util.Random;
 
-public class PiglinWhisperer implements equipBossWeapon, PiglinMoves {
+public class PiglinWhisperer implements EquipBossEquipment, PiglinMoves, NBTUtil {
     //Only god knows how this works.
     private final LivingEntity bossEntity;
+    private BossBar bossBar;
+
 
     public PiglinWhisperer(Location spawnLocation) {
         this.bossEntity = (LivingEntity) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.SKELETON);
@@ -34,57 +39,68 @@ public class PiglinWhisperer implements equipBossWeapon, PiglinMoves {
                 .content("")
                 .append(Component.text("Piglin Whisperer", NamedTextColor.AQUA, TextDecoration.BOLD))
                 .build();
+
+        //bossbar
+        this.bossBar = Bukkit.createBossBar("Piglin Whisperer", BarColor.PURPLE, BarStyle.SOLID);
+
         //attributes
         Objects.requireNonNull(this.bossEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(100);
         this.bossEntity.setHealth(100);
         this.bossEntity.customName(bossname);
         this.bossEntity.setCustomNameVisible(true);
-        //Custom ai, as we all could guess it doesn't work.
-
-        this.bossEntity.setAI(false);
-        Skeleton skeleton = (Skeleton) this.bossEntity;
-        PiglinBossPathfinding goal = new PiglinBossPathfinding(Main.getInstance(), (Mob) this.bossEntity);
-        if (!Bukkit.getMobGoals().hasGoal(skeleton, goal.getKey())) {
-            Bukkit.getMobGoals().addGoal(skeleton, 3, goal);
-        }
 
         //Equipment
-        equipSoulFireBow((Skeleton) this.bossEntity);
-        Objects.requireNonNull(this.bossEntity.getEquipment()).setHelmet(new ItemStack(Material.PIGLIN_HEAD));
-        //other stuff
-        Main.PiglinWhispererList.add(this);
-
+        equipPiglinBossEquipment((Skeleton) this.bossEntity, 1);
+        //NBT
+        addCustomNBT(this.bossEntity, Main.getInstance(), "piglinwhisperer");
+        //tasks
         LivingEntity loopedEntity = this.bossEntity;
-
-        new BukkitRunnable() {
+        BukkitRunnable randommovetask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (!loopedEntity.isValid()) {
-                    // Entity is no longer valid, stop the task
                     cancel();
-                    return;
                 }
-
-                // Perform your action here
-                executeRandomMove();
+                Random random = new Random();
+                int choice = random.nextInt(4);
+                switch (choice) {
+                    case 0:
+                        executeRandomMove();
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        switchWeapon();
+                }
+                updateBossbar();
             }
-        }.runTaskTimer(Main.getInstance(), 100L, 20L);
+        };
+        randommovetask.runTaskTimer(Main.getInstance(), 20L, 0L);
     }
 
-    public void attack(LivingEntity entity) {
-        entity.damage(10);
+    public void updateBossbar() {
+        double healthPercentage = this.bossEntity.getHealth() / this.bossEntity.getMaxHealth();
+        this.bossBar.setProgress(healthPercentage);
+    }
+    public void switchWeapon() {
+        if (Objects.requireNonNull(this.bossEntity.getEquipment()).getItemInMainHand().getType()==Material.BOW) {
+            this.bossEntity.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_AXE));
+        } else {
+            equipPiglinBossEquipment((Skeleton) this.bossEntity, 1);
+        }
     }
     public void executeRandomMove() {
         Random random = new Random();
-        int choice = random.nextInt(3); // Generates a random integer from 0 to 2
+        int choice = random.nextInt(3);
 
         switch (choice) {
             case 0:
                 performCustomPiglinMove1(this.bossEntity.getLocation(), 5, 5);
             case 1:
-
+                performCustomPiglinMove2(this.bossEntity.getLocation());
             case 2:
-
+                performCustomPiglinMove3(this.bossEntity.getLocation());
         }
     }
 
@@ -92,8 +108,11 @@ public class PiglinWhisperer implements equipBossWeapon, PiglinMoves {
         return this.bossEntity;
     }
 
+    public BossBar getBossBar() {
+        return this.bossBar;
+    }
+
     public void despawn() {
-        Main.PiglinWhispererList.remove(this);
-        bossEntity.remove();
+        this.bossEntity.remove();
     }
 }
