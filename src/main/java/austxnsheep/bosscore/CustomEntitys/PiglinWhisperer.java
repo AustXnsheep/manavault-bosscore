@@ -2,7 +2,7 @@ package austxnsheep.bosscore.CustomEntitys;
 
 import austxnsheep.bosscore.Items.EquipBossEquipment;
 import austxnsheep.bosscore.CustomMoves.PiglinMoves;
-import austxnsheep.bosscore.NbtUtil.NBTUtil;
+import austxnsheep.bosscore.Utils.NbtUtil.NBTUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -52,7 +52,7 @@ public class PiglinWhisperer implements EquipBossEquipment, PiglinMoves, NBTUtil
         //Equipment
         equipPiglinBossEquipment((Skeleton) this.bossEntity, 1);
         //NBT
-        addCustomNBT(this.bossEntity, Main.getInstance(), "piglinwhisperer");
+        addCustomNBT(this.bossEntity, Main.getInstance(), "custombosstype", "piglinwhisperer");
         //tasks
         LivingEntity loopedEntity = this.bossEntity;
         BukkitRunnable randommovetask = new BukkitRunnable() {
@@ -76,7 +76,7 @@ public class PiglinWhisperer implements EquipBossEquipment, PiglinMoves, NBTUtil
                 updateBossbar();
             }
         };
-        randommovetask.runTaskTimer(Main.getInstance(), 20L, 0L);
+        randommovetask.runTaskTimer(Main.getInstance(), 800L, 0L);
     }
 
     public void updateBossbar() {
@@ -96,7 +96,7 @@ public class PiglinWhisperer implements EquipBossEquipment, PiglinMoves, NBTUtil
 
         switch (choice) {
             case 0:
-                performCustomPiglinMove1(this.bossEntity.getLocation(), 5, 5);
+                performCustomPiglinMove1(this.bossEntity.getLocation(), 10, 3);
             case 1:
                 performCustomPiglinMove2(this.bossEntity.getLocation());
             case 2:

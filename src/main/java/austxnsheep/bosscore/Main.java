@@ -1,17 +1,16 @@
 package austxnsheep.bosscore;
 
-import org.bukkit.entity.Entity;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import austxnsheep.bosscore.Commands.Boss;
-import austxnsheep.bosscore.CustomEntitys.PiglinWhisperer;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 public final class Main extends JavaPlugin {
-    public static List<PiglinWhisperer> PiglinWhispererList;
     private static Plugin instance;
 
     @Override
@@ -22,29 +21,14 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (PiglinWhisperer piglin : PiglinWhispererList) {
-            piglin.despawn();
-        }
     }
 
     public static Plugin getInstance() {
         return instance;
     }
 
-    public static boolean containsPiglinBoss(Entity e) {
-        for (PiglinWhisperer piglin : PiglinWhispererList) {
-            if (piglin.getBossEntity() == e) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static @Nullable PiglinWhisperer findPiglinBoss(Entity e) {
-        for (PiglinWhisperer piglin : PiglinWhispererList) {
-            if (piglin.getBossEntity() == e) {
-                return piglin;
-            }
-        }
-        return null;
+    public static String generateBossBarId() {
+        Random random = new Random();
+        return String.valueOf(random.nextInt(100000));
     }
 }

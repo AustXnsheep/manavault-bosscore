@@ -2,7 +2,7 @@ package austxnsheep.bosscore.CustomMoves;
 
 import austxnsheep.bosscore.Items.EquipBossEquipment;
 import austxnsheep.bosscore.Main;
-import austxnsheep.bosscore.Particles.ShapeCreator;
+import austxnsheep.bosscore.Utils.ParticleUtils.ShapeCreator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -12,6 +12,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,23 +29,13 @@ public interface PiglinMoves extends ShapeCreator, EquipBossEquipment {
     default void performCustomPiglinMove1(Location center, double radius, double damage) {
 
         //there is NO WAY there isn't a better way to do this.
-        List<Player> playersinradius = null;
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            double distance = center.distance(player.getLocation());
-            if (distance <= radius) {
-                playersinradius.add(player);
-            }
+        drawCircle(center, radius, Particle.DRIP_LAVA);
+        List<Player> playerList= new ArrayList<>();
+        for (Player player : playerList) {
+            player.addPotionEffect(PotionEffectType.DARKNESS.createEffect(5, 1));
+            player.damage(damage);
         }
-        //one day circle logic will be here.
 
-
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-            // Code to be executed after the delay
-            for (Player player : playersinradius) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 5, 2));
-                player.damage(damage);
-            }
-        }, 20L);
     }
     default void performCustomPiglinMove2(Location center) {
         //textcomponent
@@ -136,11 +127,6 @@ public interface PiglinMoves extends ShapeCreator, EquipBossEquipment {
         for (Block loopedBlock : blocks) {
             pushBlockUpwards(loopedBlock.getLocation());
         }
-    }
-
-    default void test(Location center) {
-        //drawPolygon(Location center, double radius, int sides, Particle particle, Vector direction)
-        drawPolygon(center, 4.0, 5, Particle.CLOUD, center.getDirection());
     }
 
     private int getRandomNumber(int min, int max) {

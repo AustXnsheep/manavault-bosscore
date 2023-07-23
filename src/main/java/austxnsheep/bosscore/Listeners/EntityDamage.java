@@ -1,7 +1,7 @@
 package austxnsheep.bosscore.Listeners;
 
 import austxnsheep.bosscore.CustomMoves.PiglinMoves;
-import austxnsheep.bosscore.NbtUtil.NBTUtil;
+import austxnsheep.bosscore.Utils.NbtUtil.NBTUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -21,11 +21,12 @@ public class EntityDamage implements Listener, NBTUtil, PiglinMoves {
         Entity damager = event.getDamager();
         Entity damaged = event.getEntity();
 
-        if (Objects.equals(getCustomNBT(damager, Main.getInstance()), "piglinwhisperer")) {
+        if (Objects.equals(getCustomNBT(damager, Main.getInstance(), "custombosstype"), "piglinwhisperer")) {
             if (damager.getType()==EntityType.SKELETON && damaged instanceof Player) {
                 Skeleton entityasSkeleton = (Skeleton) damager;
                 if (entityasSkeleton.getEquipment().getItemInMainHand().getType()== Material.GOLDEN_AXE) {
                     pushPlayerUpwards((Player) damaged, 1);
+                    performCustomPiglinMove5(damager.getLocation(), 3, 3);
                     return;
                 }
                 Random random = new Random();
@@ -33,6 +34,11 @@ public class EntityDamage implements Listener, NBTUtil, PiglinMoves {
                 if (choice == 1) {
                     performCustomPiglinMove4(damaged.getLocation());
                 }
+            }
+        }
+        if (Objects.equals(getCustomNBT(damaged, Main.getInstance(), "custombosstype"), "piglinwhisperer")) {
+            if (damaged.getType()==EntityType.SKELETON) {
+
             }
         }
     }
