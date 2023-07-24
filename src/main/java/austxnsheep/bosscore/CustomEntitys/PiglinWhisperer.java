@@ -55,28 +55,26 @@ public class PiglinWhisperer implements EquipBossEquipment, PiglinMoves, NBTUtil
         addCustomNBT(this.bossEntity, Main.getInstance(), "custombosstype", "piglinwhisperer");
         //tasks
         LivingEntity loopedEntity = this.bossEntity;
-        BukkitRunnable randommovetask = new BukkitRunnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 if (!loopedEntity.isValid()) {
-                    cancel();
+                    this.cancel();
+                } else {
+                    Random random = new Random();
+                    int choice = random.nextInt(3);
+                    switch (choice) {
+                        case 0:
+                            executeRandomMove();
+                        case 1:
+                            break;
+                        case 2:
+                            switchWeapon();
+                    }
+                    updateBossbar();
                 }
-                Random random = new Random();
-                int choice = random.nextInt(4);
-                switch (choice) {
-                    case 0:
-                        executeRandomMove();
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        switchWeapon();
-                }
-                updateBossbar();
             }
-        };
-        randommovetask.runTaskTimer(Main.getInstance(), 800L, 0L);
+        }.runTaskTimer(Main.getInstance(), 0L, 400L);
     }
 
     public void updateBossbar() {
@@ -97,10 +95,13 @@ public class PiglinWhisperer implements EquipBossEquipment, PiglinMoves, NBTUtil
         switch (choice) {
             case 0:
                 performCustomPiglinMove1(this.bossEntity.getLocation(), 10, 3);
+                break;
             case 1:
                 performCustomPiglinMove2(this.bossEntity.getLocation());
+                break;
             case 2:
                 performCustomPiglinMove3(this.bossEntity.getLocation());
+                break;
         }
     }
 

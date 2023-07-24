@@ -1,5 +1,8 @@
 package austxnsheep.bosscore;
 
+import austxnsheep.bosscore.Listeners.EntityDamage;
+import austxnsheep.bosscore.Listeners.EntityDeath;
+import austxnsheep.bosscore.Listeners.PlayerJoin;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,6 +20,9 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         instance = this;
         Objects.requireNonNull(this.getCommand("boss")).setExecutor(new Boss());
+        getServer().getPluginManager().registerEvents(new EntityDeath(), this);
+        getServer().getPluginManager().registerEvents(new EntityDamage(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
     }
 
     @Override

@@ -28,9 +28,12 @@ import static org.bukkit.Bukkit.getServer;
 public interface PiglinMoves extends ShapeCreator, EquipBossEquipment {
     default void performCustomPiglinMove1(Location center, double radius, double damage) {
 
-        //there is NO WAY there isn't a better way to do this.
-        drawCircle(center, radius, Particle.DRIP_LAVA);
-        List<Player> playerList= new ArrayList<>();
+        //It's extremely beutiful.
+
+        center.setPitch(-90.0F);
+        Vector down = center.getDirection();
+        drawCircle(center, radius, Particle.DRIP_LAVA, down);
+        List<Player> playerList = getPlayersInRadius(center, radius);
         for (Player player : playerList) {
             player.addPotionEffect(PotionEffectType.DARKNESS.createEffect(5, 1));
             player.damage(damage);
@@ -44,6 +47,14 @@ public interface PiglinMoves extends ShapeCreator, EquipBossEquipment {
                 .content("")
                 .append(Component.text("Piglin Minion", NamedTextColor.RED, TextDecoration.BOLD))
                 .build();
+        Location down = center.clone();
+        down.setPitch(-90.0F);
+        Vector direction = down.getDirection();
+        drawCircle(center.clone().add(0, 5, 0), 10, Particle.GLOW, direction);
+        drawPolygon(center.clone().add(0, 5, 0), 4, 10, Particle.GLOW, direction);
+        drawPolygon(center.clone().add(0, 5, 0), 6, 10, Particle.GLOW, direction);
+        drawCircle(center.clone().add(0, 5, 0), 5, Particle.GLOW, direction);
+        drawPolygon(center.clone().add(0, 5, 0), 3, 5, Particle.GLOW, direction);
         for (int i = 0; i <= getRandomNumber(5, 10); i++){
             Vector vector = center.getDirection();
             Location newlocation = center.add(vector);

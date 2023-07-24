@@ -24,21 +24,16 @@ public class EntityDamage implements Listener, NBTUtil, PiglinMoves {
         if (Objects.equals(getCustomNBT(damager, Main.getInstance(), "custombosstype"), "piglinwhisperer")) {
             if (damager.getType()==EntityType.SKELETON && damaged instanceof Player) {
                 Skeleton entityasSkeleton = (Skeleton) damager;
-                if (entityasSkeleton.getEquipment().getItemInMainHand().getType()== Material.GOLDEN_AXE) {
-                    pushPlayerUpwards((Player) damaged, 1);
-                    performCustomPiglinMove5(damager.getLocation(), 3, 3);
+                if (entityasSkeleton.getEquipment().getItemInMainHand().getType() == Material.BOW) {
+                    performCustomPiglinMove4(damaged.getLocation());
                     return;
                 }
                 Random random = new Random();
                 int choice = random.nextInt(3);
                 if (choice == 1) {
-                    performCustomPiglinMove4(damaged.getLocation());
+                    pushPlayerUpwards((Player) damaged, 1);
+                    performCustomPiglinMove5(damager.getLocation(), 3, 3);
                 }
-            }
-        }
-        if (Objects.equals(getCustomNBT(damaged, Main.getInstance(), "custombosstype"), "piglinwhisperer")) {
-            if (damaged.getType()==EntityType.SKELETON) {
-
             }
         }
     }

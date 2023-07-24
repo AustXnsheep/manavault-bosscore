@@ -62,7 +62,7 @@ public class Boss implements SummonBoss, PiglinMoves, CommandExecutor {
                             return true;
                         }
                         case "drawCircle" -> {
-                            drawCircle(player.getLocation(), 4.0, Particle.CHERRY_LEAVES);
+                            drawCircle(player.getLocation(), 4.0, Particle.CHERRY_LEAVES, player.getLocation().getDirection());
                             return true;
                         }
                         case "drawLine" -> {

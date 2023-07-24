@@ -10,7 +10,7 @@ public interface ShapeCreator {
         double length = direction.length();
         direction.normalize();
 
-        for (double i = 0; i <= length; i += 0.25) {
+        for (double i = 0; i <= length; i += 0.1) {
             Vector shift = direction.clone().multiply(i);
             Location loc = start.clone().add(shift);
             start.getWorld().spawnParticle(particle, loc, 1);
@@ -47,8 +47,7 @@ public interface ShapeCreator {
             prevLoc = loc;
         }
     }
-    default void drawCircle(Location location, double radius, Particle particle) {
-        Vector direction = location.getDirection();
+    default void drawCircle(Location location, double radius, Particle particle, Vector direction) {
         direction.normalize();
 
         Vector ortho1 = new Vector(-direction.getZ(), 0, direction.getX()).normalize();
